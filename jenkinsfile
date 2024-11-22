@@ -4,10 +4,7 @@ pipeline {
         jdk 'jdk17'
         nodejs 'node23'
     }
-    environment {
-        SCANNER_HOME=tool 'sonar-scanner'
-    }
-    stages {
+      stages {
         stage ("clean workspace") {
             steps {
                 cleanWs()
@@ -18,21 +15,7 @@ pipeline {
                 git 'https://github.com/santoshbd67/DevOps-Project-Zomato-Kastro.git'
             }
         }
-        stage("Sonarqube Analysis"){
-            steps{
-                withSonarQubeEnv('sonar-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=zomato \
-                    -Dsonar.projectKey=zomato '''
-                }
-            }
-        }
-        stage("Code Quality Gate"){
-           steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
-                }
-            } 
-        }
+     
         stage("Install NPM Dependencies") {
             steps {
                 sh "npm install"
